@@ -1,0 +1,15 @@
+{template 'touch/common/header'}
+<div class="{if $_GPC['inajax']}mui-navbar-inner {/if}mui-bar mui-bar-nav">
+    <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>{lang text_back}
+    </button>
+    <h1 class="mui-center mui-title">{$title}</h1>
+</div>
+<div class="mui-{if $_GPC['inajax']}page-{/if}content">
+    <div style="padding: 100px 20px; text-align: center;">
+        <p class="mui-text-muted" style="margin-top: 20px; font-size: 17px"><strong>参数1:</strong>{$_S['plugins']['demo']['setting1']}</p>
+        <p class="mui-text-muted" style="margin-top: 20px; font-size: 17px"><strong>参数2:</strong>{$_W['pluginset']['setting2']}</p>
+        <p class="mui-text-muted" style="margin-top: 20px; font-size: 17px"><strong>参数N:</strong>{$settingn}</p>
+    </div>
+</div>
+{template 'touch/common/footer'}

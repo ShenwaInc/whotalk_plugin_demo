@@ -1,0 +1,14 @@
+{template 'touch/common/header'}
+<div class="{if $_GPC['inajax']}mui-navbar-inner {/if}mui-bar mui-bar-nav">
+    <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+        <span class="mui-icon mui-icon-left-nav"></span>{lang text_back}
+    </button>
+    <h1 class="mui-center mui-title">{$title}</h1>
+</div>
+<div class="mui-{if $_GPC['inajax']}page-{/if}content">
+    <div style="padding: 100px; text-align: center;">
+        <img src="{$qrcodeurl}" width="280" height="280" />
+        <p class="mui-text-muted" style="margin-top: 20px; font-size: 17px">该页面仅支持手机浏览，请使用手机扫码浏览</p>
+    </div>
+</div>
+{template 'touch/common/footer'}

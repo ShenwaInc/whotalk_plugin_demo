@@ -1,0 +1,31 @@
+{template 'admin/common/header'}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header">{$title}</div>
+                <div class="layui-card-body">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this"><a href="{php echo weburl('demo')}">插件入口</a></li>
+                        <li><a href="{php echo weburl('demo/setting')}">插件设置</a></li>
+                    </ul>
+                    <a href="{php echo weburl('demo/hello')}" target="_blank" class="layui-btn layui-btn-normal">{$variable}</a>
+                    <a href="{php echo wmurl('demo',array(),true)}" target="_blank" class="layui-btn">插件前台首页</a>
+                    <a href="{php echo wmurl('demo/test',array('op'=>$variable),true)}" target="_blank" class="layui-btn layui-btn-warm">插件前台测试页带参数</a>
+                    <a href="{php echo wmurl('demo',array(),true,'api')}" target="_blank" class="layui-btn layui-btn-danger">插件前台首页接口API</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var Controller = "{$_W['controller']}",Action = "{$_W['action']}";
+    var layform;
+    layui.use(['element','layer'], function(){
+        var element=layui.element,layer = layui.layer;
+        layer.ready(function(){
+            layer.msg("这里是后台",{icon:1});
+        });
+    });
+</script>
+{template 'admin/common/footer'}

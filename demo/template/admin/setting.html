@@ -1,0 +1,77 @@
+{template 'admin/common/header'}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12 layui-col-xs12">
+            <div class="layui-card">
+                <div class="layui-card-header">{$title}</div>
+                <div class="layui-card-body">
+                    <ul class="layui-tab-title">
+                        <li><a href="{php echo weburl('demo')}">插件入口</a></li>
+                        <li class="layui-this"><a href="{php echo weburl('demo/setting')}">插件设置</a></li>
+                    </ul>
+                    <form class="layui-form" method="post" action="{php echo $this->createWebUrl('savepluginset')}" lay-filter="component-form-element">
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                        <input type="hidden" name="forward" value="{$_W['siteurl']}" />
+                        <input type="hidden" name="identity" value="{$_W['plugin']}" />
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件设置项1</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="data[setting1]" value="{$_W['pluginset']['setting1']}" placeholder="输入值并保存后查看输出" autocomplete="off" class="layui-input" />
+                                <p class="layui-word-aux">这里是插件设置项1{if $_W['pluginset']['setting1']}，值为：{$_W['pluginset']['setting1']}，也可以这样输出：{$_S['plugins']['demo']['setting1']}{/if}，可在Whotalk内任意文件直接使用该设置项，无需加载和读取</p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件设置项2</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="data[setting2]" value="{$_W['pluginset']['setting2']}" placeholder="输入值并保存后查看输出" autocomplete="off" class="layui-input" />
+                                {if $_W['pluginset']['setting2']}
+                                <p class="layui-word-aux">设置项2的值为：{$_W['pluginset']['setting2']}，也可以这样输出：{$_S['plugins']['demo']['setting2']}，可在Whotalk内任意文件直接使用该设置项</p>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">插件设置项N</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="data[settingn]" value="{$_W['pluginset']['settingn']}" placeholder="输入插件设置项N的值" autocomplete="off" class="layui-input" />
+                                <p class="layui-word-aux">可以参照此方式自定义设置项</p>
+                                <p class="layui-word-aux">
+                                    <strong class="text-danger">注：请尽量只做简单设置，如需要复杂设置或存值多的设置项，请使用数据库保存</strong>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo" type="submit" value="true" name="savedata">保存</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重填</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var Controller = "{$_W['controller']}",Action = "{$_W['action']}";
+    var layform;
+    layui.use(['form','element','layer'], function(){
+        var form = layui.form,element=layui.element,layer = layui.layer;
+        layform = form;
+        layer.ready(function(){
+        });
+        form.on('switch(ctrls)',function(data){
+            var ctrltarget = jQuery(data.elem).attr('data-ctrl');
+            if(data.elem.checked){
+                jQuery(ctrltarget).removeClass('layui-hide');
+            }else{
+                jQuery(ctrltarget).addClass('layui-hide');
+            }
+        });
+        form.on('radio(ctrls)', function(data){
+            var target = $(data.elem).data('target');
+            $(target).addClass('layui-hide');;
+            $(target+'.form-item'+data.value).removeClass('layui-hide');
+        });
+    });
+</script>
+{template 'admin/common/footer'}
