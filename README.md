@@ -4,7 +4,7 @@
 ## 参考资料
 1、微擎模块开发手册：[https://wiki.w7.cc/chapter/35?id=1535](https://wiki.w7.cc/chapter/35?id=1535)
 2、Whotalk常用公共函数详解：
-3、Whotalk插件开发演示.zip：请[进入售后群](https://qm.qq.com/cgi-bin/qm/qr?k=3RMYrjypE25dfm6xvtVDaMnGdIJhe5r7&jump_from=webapi)群文件下载
+3、Whotalk插件开发演示：[https://github.com/ShenwaInc/whotalk_plugin_demo](https://github.com/ShenwaInc/whotalk_plugin_demo)
  
 
 
@@ -22,29 +22,30 @@ Whotalk所有插件都存放在 **/addons/xfy_whotalk/plugin/** 目录下，每�
 完整的插件目录结构
 
 ```
-/addons/xfy_whotalk/plugin/identity/
-											/mobile/													//前台控制器文件夹
-            			 					 /xxx.php										//前台控制器文件
-            					/static/													//静态资源文件夹，根据需要自定义
-            			 					 /css/
-                   					 /font/
-                   					 /images/
-                   					 /js/
-            					/template/												//前端界面模板文件夹
-            				 				 /admin/									//后台前端模板文件夹
-                     			 				 /xxx.html
-                     				 /mobile/									//前台前端模板文件夹（默认为PC端）
-                     							 /touch/						//前台前端模板文件夹（移动端，若插件不区分终端请忽略）
-                            			 /xxx.html
-            					/web/															//后台控制器文件夹
-            							/xxx.php
-            					/identity.mod.php									//插件模型文件，其中 identity 为插件标识
-            					/manifest.php											//插件安装文件
+/plugin/identity/
+								/mobile/										//前台控制器文件夹
+            			 		 /xxx.php							//前台控制器文件
+            		/static/										//静态资源文件夹，根据需要自定义
+            			 		 /css/
+                   		 /font/
+                   		 /images/
+                   		 /js/
+            		/template/									//前端界面模板文件夹
+            				 		 /admin/						//后台前端模板文件夹
+                     			 		 /xxx.html
+                     		 /mobile/						//前台前端模板文件夹（默认为PC端）
+                     						/touch/			//前台前端模板文件夹（移动端，若插件不区分终端请忽略）
+                            		/xxx.html
+            		/web/												//后台控制器文件夹
+            				/xxx.php
+            		/identity.mod.php						//插件模型文件，其中 identity 为插件标识
+            		/manifest.php								//插件安装文件
 ```
 插件目录结构说明，其中 **identity** 为插件标识 
 
 ### 三、安装文件
-插件安装文件的结构必须根据官方提供的示例样板进行编写，否则无法正常识别与安装。
+插件安装文件位于**插件的根目录**下，必须以 **manifest.php** 命名。
+安装文件的结构必须根据官方提供的示例样板进行编写，否则无法正常识别与安装。
 ```php
 <?php
 defined('IN_IA') or exit('Access Denied');
@@ -99,13 +100,16 @@ return $plugin;
 安装文件样板示例
 
 ### 四、插件模型（M）
-插件仅支持一个模型文件，且为必须包含的文件，可将所有模型写在该文件内，并在Whotalk内的任意文件通过如下代码调用该模型下的方法。
+插件仅支持一个模型文件，且为**必须包含**的文件。
+插件模型文件位于 **/addons/xfy_whotalk/plugin/identity/identity.mod.php**，其中的identity为插件标识。
+可将所有模型写在该文件内，并在Whotalk内的任意文件通过如下代码调用该模型下的方法。
 ```php
 
 p('identity')->foo();								//其中 identity 为插件标识，foo为方法名
 
 ```
 插件模型方法调用示意，**调用前不需要引用模型文件**
+**
 ```php
 <?php
 defined('IN_IA') or exit('Access Denied');
@@ -136,6 +140,7 @@ class Demo_Model extends Xfy_whotalkModuleSite {
 
 ### 五、控制器（C）
 #### 1、前台控制器
+前台控制器文件存放在 **/addons/xfy_whotalk/plugin/identity/mobile/ **下，按直接按路由命名，控制器名和文件名对应，命名规则是路由_Controller，首字母大写。默认是 Index_Controller，默认调用 main() 方法。
 ```php
 <?php
 defined('IN_IA') or exit('Access Denied');
@@ -160,21 +165,26 @@ class Index_Controller extends Xfy_whotalkModuleSite {
 
 }
 ```
-前台控制器样板示例
+前台控制器样板示例(/plugin/**identity**/mobile/index.php)
+
 **控制器与方法：**
-前台控制器需申明类和方法，并且需要返回数据或返回操作结果。通过URL参数访问不同的方法，默认控制器为Index_Controller，默认方法为 main()。例如（以下的identity为插件标识）：
+前台控制器需申明类和方法，并且需要返回数据或返回操作结果。通过URL参数访问不同的方法。
+示例（以下的identity为插件标识）：
 > URL为 /app/index.php?i=x&c=entry&m=xfy_whotalk&do=mobile&r=identity
 > 执行的是 /plugin/identity/mobile/index.php 文件里面 Index_Controller 控制器的 main() 方法，
 > 而 &r=identity.test 执行的是 index.php 文件里面 Index_Controller 控制器的 test() 方法。
+> 路由可支持 &r=identity.test.test1 参数，执行的是 Test_Controller 的 test1() 方法。
 
 如果方法的代码量过大，还可以将方法单独作为一个文件来编写，例如上述的 &r=identity.test，还可以在 /plugin/identity/mobile/ 文件夹下新建一个 test.php文件，这时候控制器名为 Test_Controller，方法为 main()。
 
 **访问链接：**
-前台控制器的访问链接统一通过通用函数 wmurl('identity/test') 来生成，具体用法请参考《常用公共函数详解》中对 wmurl() 函数的说明。
+前台控制器的访问链接可通过公共函数 wmurl('identity/test') 来生成，其中的 'identity/test' 为路由名，具体用法请参考《常用公共函数详解》中对 wmurl() 函数的说明。
 
 **访问方式：**
 前台控制器支持接口访问方式和页面访问方式，当通过接口访问时，会将每个方法返回的数据以JSON格式直接输出；当通过页面链接方式访问时，系统会自动读取对应的界面模板来编译并直接显示页面，而这时，方法返回的数据将自动转换为变量，并可直接在模板内引用，具体的引用规则会在下一节详细说明。如需以接口的方式访问控制器，则直接将URL里的 &do=mobile 修改为 &do=api ，或者在生成链接时给定api参数，具体方法请参考《常用公共函数详解》中对 wmurl() 函数的说明。
 #### 2、后台控制器
+后台控制器文件存放在 **/addons/xfy_whotalk/plugin/identity/web/ **下，按直接按路由命名。
+后台控制器的访问链接可通过公共函数 weburl('identity/test') 来生成，其中的 'identity/test' 为路由名，具体用法请参考《常用公共函数详解》中对 weburl() 函数的说明。
 ```php
 <?php
 defined('IN_IA') or exit('Access Denied');
@@ -193,7 +203,7 @@ if ($_W['action']=='hello'){
 }
 
 ```
-后台控制器样板示例
+后台控制器样板示例(/plugin/**identity**/web/index.php)
 后台控制器无需声明类和方法，将直接运行文件，根据 $_W['action'] 区分路由，也可以将不同路由写在不同的文件内，优先读取单独文件。例如：
 > URL为 /web/index.php?c=site&a=entry&m=xfy_whotalk&do=web&r=identity
 > 执行的是 /plugin/identity/web/index.php 文件
@@ -215,7 +225,24 @@ if ($_W['action']=='hello'){
 
 ## 常见问题
 
+1. **开发的插件如何将入口嵌入到主程序中**
+   1. **添加导航链接：**可以通过后台的【内容管理】→【导航管理】，将插件前台入口添加到导航中；
+   1. **通过JS文件添加：**主程序的前端代码是使用VUE开发，并且安装包内的源码是已经过编译的代码，会给二开带来不便，这时候如果要修改主程序的前端界面，可以通过在HTML文件(/addons/xfy_whotalk/h5/index.html)额外引用JS文件来使用JS新增或修改节点的方式来控制显示的内容，也可以结合修改CSS样式文件来隐藏内容；
+   1. **替换页面链接：**如主程序页面需要大量调整，可以直接在上一个页面的入口直接替换进入该页面的链接，直接进入新建的页面内。
+2. **插件内如何调用主程序的公共模型的方法**
 
+主程序的模型文件存放于 /addons/xfy_whotalk/core/model/ 目录下，以 xxx.mod.php 为文件名，在调用时，可直接参考如下代码直接调用。
+```php
+
+m('xxx')->foo();				//其中 xxx 为模型名，foo为方法名
+
+```
+公共模型方法调用示意，**调用前不需要引用模型文件**
+**
+
+3. 如何查看各公共模型中的方法
+
+可新建一个PHP文件，引用该模型文件并新建一个类继承该模型，后就可以通过 $this-> 来查看各公共模型中都支持哪些方法，以及接收什么参数。
 
 
 
